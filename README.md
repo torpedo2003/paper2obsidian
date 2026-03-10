@@ -59,12 +59,13 @@ What it is good at:
 
 ### 4. `parallel-paper-reader`
 
-Use this skill when you want to read **multiple papers in parallel** through Codex / Codex CLI.
+Use this skill when you want to read **multiple papers in parallel** through an agent CLI (Codex, Claude Code).
 
 What it is good at:
 - launching one process per paper
 - preserving the original paper input format
 - speeding up batch reading compared with serial processing
+- supporting multiple agent CLIs: `codex`, `claude`
 
 ## How It Fits Into a Workflow
 
@@ -168,12 +169,13 @@ skills/
 
 ### 4. `parallel-paper-reader`
 
-当你想通过 Codex / Codex CLI **并行阅读多篇论文** 时，使用这个 skill。
+当你想通过 Agent CLI（Codex、Claude Code）**并行阅读多篇论文** 时，使用这个 skill。
 
 它擅长：
 - 每篇论文启动一个独立进程
 - 保留用户原始输入格式
 - 相比串行处理更适合批量阅读
+- 支持多种 Agent CLI：`codex`, `claude`
 
 ## 工作流建议
 
