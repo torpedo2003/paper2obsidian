@@ -14,7 +14,7 @@ import requests
 
 API_BASE = "https://mineru.net/api/v4"
 SUPPORTED_EXTS = {".pdf", ".docx", ".pptx", ".jpg", ".jpeg", ".png"}
-DEFAULT_MODEL = "mineru"
+DEFAULT_MODEL = "pipeline"
 DEFAULT_LANGUAGE = "auto"
 DEFAULT_TIMEOUT = 600
 DEFAULT_POLL_INTERVAL = 5

@@ -35,7 +35,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--resume", action="store_true", help="Skip files that already exist")
     parser.add_argument("--recursive", action="store_true", help="Walk subdirectories")
-    parser.add_argument("--model", default="vlm", choices=MODEL_CHOICES, help="Model version")
+    parser.add_argument("--model", default="pipeline", choices=MODEL_CHOICES, help="Model version")
     parser.add_argument(
         "--language",
         default="auto",
