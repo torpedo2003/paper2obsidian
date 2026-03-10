@@ -6,6 +6,8 @@
 
 It is designed for research-heavy workflows: reading a single paper deeply, summarizing a group of papers, rebuilding local paper indexes, and scaling multi-paper reading with parallel Codex tasks.
 
+This project is adapted from [`Chang-pw/paper2obsidian_skill`](https://github.com/Chang-pw/paper2obsidian_skill/tree/main).
+
 ## Highlights
 
 - **Single-paper reading**: download a paper PDF, extract content with MinerU when possible, and generate a detailed Obsidian note.
@@ -112,6 +114,8 @@ Add a license here if you want to open-source the repository more formally.
 `paper2obsidian` 是一组面向 Obsidian 论文工作流的 skills，用于把单篇论文阅读、多篇论文综述、论文索引整理与并行阅读整合到同一个本地知识库流程中。
 
 它适合研究型工作流：精读单篇论文、总结一组论文、重建本地论文索引，以及通过并行 Codex 任务提升批量读论文效率。
+
+本项目改编自 [`Chang-pw/paper2obsidian_skill`](https://github.com/Chang-pw/paper2obsidian_skill/tree/main)。
 
 ## 功能亮点
 
