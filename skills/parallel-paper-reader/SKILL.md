@@ -12,7 +12,7 @@ description: 当用户要并行阅读多篇论文，且给出多个 arXiv ID、a
 把用户给的每篇论文原样作为一个参数传给脚本：
 
 ```bash
-skills/parallel-paper-reader/scripts/launch_codex_reads.sh \
+skills/parallel-paper-reader/scripts/launch_readers.sh \
   "2503.15457" \
   "https://arxiv.org/abs/2603.04379" \
   "Helios: Real Real-Time Long Video Generation Model" \

@@ -81,6 +81,6 @@ date_added: YYYY-MM-DD
 ## 相关论文
 
 - **论文英文标题**
-  [链接](https://example.com/paper) | [项目主页](https://example.com/project) | [[xxxx.xxxxx]]
+  [链接](https://arxiv.org/abs/xxxx.xxxxx) | [主页](https://<author>.github.io/project) | [代码](https://github.com/<author>/<project>) | [[xxxx.xxxxx]]
   它与本文的关系是什么，解决了什么问题，核心贡献是什么
 - ...
