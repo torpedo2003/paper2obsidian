@@ -22,7 +22,7 @@ date_added: YYYY-MM-DD
 
 - **作者：** 作者1, 作者2 等（机构）
 - **发表：** 会议/期刊, 月份 年份
-- **来源：** [链接](https://example.com/paper) | [PDF](../../assets/pdfs/xxxx.xxxxx.pdf) | [项目主页](如有)
+- **来源：** [链接](https://example.com/paper) | [PDF](../../assets/pdfs/xxxx.xxxxx.pdf) | [主页](https://<author>.github.io/project) | [代码](https://github.com/<author>/<project>)
 
 ---
 
