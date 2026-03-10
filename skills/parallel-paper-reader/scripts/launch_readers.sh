@@ -62,26 +62,22 @@ while [ "$index" -lt "$total" ]; do
 
   echo "Starting batch ${batch}: ${current_batch_size} paper(s)"
 
-  pids=()
   for ((offset = 0; offset < current_batch_size; offset++)); do
     paper=${papers[index + offset]}
     echo "Launching ${AGENT} for: ${paper}"
     $AGENT_CMD "${PROMPT_TEMPLATE}${paper}" &
-    pids+=("$!")
-  done
-
-  for pid in "${pids[@]}"; do
-    wait "$pid"
   done
 
   index=$((index + current_batch_size))
 
   if [ "$index" -lt "$total" ]; then
-    echo "Batch ${batch} completed. Waiting ${SLEEP_SECONDS}s before next batch..."
+    echo "Batch ${batch} started. Waiting ${SLEEP_SECONDS}s before next batch..."
     sleep "$SLEEP_SECONDS"
   fi
 
   batch=$((batch + 1))
 done
 
+echo "All batches launched. Waiting for all tasks to complete..."
+wait
 echo "All paper tasks completed."
