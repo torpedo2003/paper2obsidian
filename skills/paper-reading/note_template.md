@@ -46,14 +46,16 @@ date_added: YYYY-MM-DD
 
 ## 实验与结果
 
-用自然语言描述关键发现，辅以具体数字。不要直接贴表格。
+用自然语言描述关键发现，辅以具体数字，同时需要展示关键实验表格。
 
 ![Figure X](../../assets/mineru/xxxx.xxxxx/images/xxx.jpg)
 *Figure X: 中文说明*
 
 ---
 
-## 消融实验（如有）
+## 消融实验
+
+如果文章中确实没有涉及到任何消融实验或相关内容，可以跳过此章节。
 
 ---
 
@@ -79,7 +81,6 @@ date_added: YYYY-MM-DD
 ## 相关论文
 
 - **论文英文标题**
-  [链接](https://example.com/paper) | [PDF](../../assets/pdfs/xxxx.xxxxx.pdf) | [项目主页](如有) | [[xxxx.xxxxx]]（即使 Vault 里没有也要写进来，保持格式）
+  [链接](https://example.com/paper) | [项目主页](https://example.com/project) | [[xxxx.xxxxx]]
   它与本文的关系是什么，解决了什么问题，核心贡献是什么
-
 - ...

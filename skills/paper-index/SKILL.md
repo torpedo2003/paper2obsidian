@@ -23,12 +23,12 @@ description: 使用 Obsidian Bases 维护论文数据库，自动生成和更新
 vault/
 ├── papers/
 │   ├── index/
-│   │   ├── 01All-Papers.base
+│   │   ├── 01-All-Papers.base
 │   │   ├── Video-Generation.base
 │   │   ├── Multimodal.base
 │   │   ├── Reasoning.base
 │   │   ├── ...
-│   │   └── 00Index-Audit.md        # 可选：重索引/关系校验摘要
+│   │   └── 00-Index-Audit.md        # 可选：重索引/关系校验摘要
 │   └── notes/
 │       ├── 2402.03300.md
 │       ├── 2503.01234.md
@@ -117,9 +117,9 @@ vault/
 
 检查 `$OBSIDIAN_VAULT/papers/index/` 下已有的 `.base` 文件，并执行以下操作：
 
-- 如果 `01All-Papers.base` 不存在则创建；存在则不覆盖
+- 如果 `01-All-Papers.base` 不存在则创建；存在则不覆盖
 - 对新分类创建对应 `.base` 文件；已有分类 `.base` 不覆盖
-- 如果用户明确要求“重新索引当前 vault”，除了 `.base` 外，还可以额外生成或更新一个简短的 `00Index-Audit.md`，汇总：
+- 如果用户明确要求“重新索引当前 vault”，除了 `.base` 外，还可以额外生成或更新一个简短的 `00-Index-Audit.md`，汇总：
   - 新增了哪些分类
   - 哪些论文缺失关键字段
   - 哪些 `paper_id` 重复或疑似冲突
@@ -130,12 +130,12 @@ vault/
 - 检查正文中直接出现的论文 wikilinks（例如 `[[2402.03300]]`、`[[papers/notes/2402.03300]]`）是否能解析到现有文件
 - 如果存在 `references`, `related`, `cites`, `cited_by`, `predecessors`, `successors` 等字段，检查其中引用的 `paper_id` / note link 是否在当前 vault 中存在
 - 对于能**确定性修复**的链接格式问题，可以直接统一
-- 对于歧义情况，只在 `00Index-Audit.md` 中报告，不要擅自改写
+- 对于歧义情况，只在 `00-Index-Audit.md` 中报告，不要擅自改写
 - 不要为了补全关系而去在线检索论文；此 skill 的目标是整理本地库，而不是做外部文献发现
 
 ## `.base` 模板
 
-**总库（`01All-Papers.base`）：** 如果不存在则创建，已存在则不覆盖。
+**总库（`01-All-Papers.base`）：** 如果不存在则创建，已存在则不覆盖。
 
 ```yaml
 filters:
