@@ -46,7 +46,7 @@ date_added: YYYY-MM-DD
 
 ## 实验与结果
 
-用自然语言描述关键发现，辅以具体数字，同时需要展示关键实验表格。
+用自然语言描述关键发现，辅以具体数字。不要直接贴表格。
 
 ![Figure X](../../assets/mineru/xxxx.xxxxx/images/xxx.jpg)
 *Figure X: 中文说明*
