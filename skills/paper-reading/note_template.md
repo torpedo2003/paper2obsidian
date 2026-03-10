@@ -79,7 +79,6 @@ date_added: YYYY-MM-DD
 ## 相关论文
 
 - **论文英文标题**
-  
   [链接](https://example.com/paper) | [PDF](../../assets/pdfs/xxxx.xxxxx.pdf) | [项目主页](如有) | [[xxxx.xxxxx]]（即使 Vault 里没有也要写进来，保持格式）
   它与本文的关系是什么，解决了什么问题，核心贡献是什么
 - ...
