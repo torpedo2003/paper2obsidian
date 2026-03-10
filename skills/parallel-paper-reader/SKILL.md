@@ -1,36 +1,36 @@
 ---
 name: parallel-paper-reader
-description: Use when the user wants to read multiple papers in parallel through Codex or Codex CLI, especially when they provide several arXiv IDs, arXiv URLs, PDF links, or other paper URLs and want one thread/process per paper. Launch one `codex exec` command per paper concurrently instead of reading papers serially.
+description: 当用户要并行阅读多篇论文，且给出多个 arXiv ID、arXiv 链接、PDF 链接、论文页面链接或标题时使用。
 ---
 
-# Parallel Paper Reader
+# 并行读论文
 
-Launch one Codex task per paper in parallel.
+多篇论文时，直接运行脚本，不要手动逐篇启动。
 
-## Workflow
+## 用法
 
-1. Treat each user-provided paper reference as an opaque input. Do not require an arXiv ID.
-2. Accept raw arXiv IDs, arXiv URLs, PDF links, and other paper URLs, or even the paper title.
-3. Start one background task per paper with:
+把用户给的每篇论文原样作为一个参数传给脚本：
 
 ```bash
-codex --dangerously-bypass-approvals-and-sandbox --search exec "帮我阅读这篇论文：<paper_input>"
+skills/parallel-paper-reader/scripts/launch_codex_reads.sh \
+  "2503.15457" \
+  "https://arxiv.org/abs/2603.04379" \
+  "Helios: Real Real-Time Long Video Generation Model" \
+  "https://example.com/paper.pdf"
 ```
 
-4. Launch all tasks before waiting for completion. Do not run papers serially.
-5. Prefer `scripts/launch_codex_reads.sh` when many papers are provided.
+## 规则
 
-## Commands
+- 不要求必须是 arXiv ID，标题、URL、PDF 链接都可以。
+- 输入保持原样传入，不要改写。
+- 每篇论文单独启动一个 `codex exec` 进程。
+- 并行和分批规则全部交给脚本处理。
+- 按用户提供顺序输出启动日志。
 
-Run the bundled script:
+## 提示词
 
-```bash
-scripts/launch_codex_reads.sh "2503.15457" "https://arxiv.org/abs/2603.04379" "Helios: Real Real-Time Long Video Generation Model" "https://example.com/paper.pdf"
+脚本内部固定使用：
+
+```text
+帮我阅读这篇论文：<paper_input>
 ```
-
-## Output Rules
-
-- Echo each paper before launching it.
-- Keep one paper per process.
-- Preserve the user-provided order when printing launch logs.
-- Pass the original input through unchanged.
