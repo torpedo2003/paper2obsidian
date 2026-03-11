@@ -33,6 +33,8 @@ date_added: YYYY-MM-DD
 ![Figure X](../../assets/mineru/xxxx.xxxxx/images/xxx.jpg)
 *Figure X: 中文说明*
 
+图文穿插排版
+
 ---
 
 ## 核心方法
@@ -42,14 +44,18 @@ date_added: YYYY-MM-DD
 ![Figure X](../../assets/mineru/xxxx.xxxxx/images/xxx.jpg)
 *Figure X: 中文说明*
 
+图文穿插排版
+
 ---
 
 ## 实验与结果
 
-务必贴出关键实验结果图表，解释实验设置，并根据图表内容描述关键发现
+务必贴出关键定量实验结果图表，解释实验设置，并根据图表内容描述关键发现
 
 ![Figure X](../../assets/mineru/xxxx.xxxxx/images/xxx.jpg)
 *Figure X: 中文说明*
+
+图文穿插排版
 
 ![Table X](../../assets/mineru/xxxx.xxxxx/images/xxx.jpg)
 *Table X: 中文说明*

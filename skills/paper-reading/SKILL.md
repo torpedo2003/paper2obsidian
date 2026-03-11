@@ -97,7 +97,7 @@ python scripts/mineru_api.py --file "$OBSIDIAN_VAULT/assets/pdfs/{PAPER_ID}.pdf"
   - 主页（论文项目的website/github/huggingface，若没有则跳过）
   - 代码（论文项目的github仓库，若没有则跳过）
   - Obsidian 风格的链接（例如[[paper_id]]，必填）。
-- 整篇笔记至少 1500 字
+- 整篇笔记至少 1500 字，图文穿插排版写作
 
 ### 5. 更新论文索引
 
