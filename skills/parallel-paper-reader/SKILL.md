@@ -38,3 +38,8 @@ skills/parallel-paper-reader/scripts/launch_readers.sh -a codex "2503.15457"
 如果用户指定了其他不在此列表中的 agent，**直接终止并告知用户**：
 - 告诉用户当前支持的 agent 列表
 - 告诉用户该功能尚未支持，建议用户更换为支持的 agent
+
+## 注意
+
+- 每篇论文都会启动一个独立的agent进行 `paper-reading`，生成独立的笔记
+- 如果某些子agent的任务失败了，不要尝试接管、重试或补救，只需要告知用户哪些论文还未生成对应的笔记
