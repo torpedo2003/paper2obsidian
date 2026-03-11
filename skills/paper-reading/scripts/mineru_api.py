@@ -21,6 +21,7 @@ def build_args() -> list[str]:
     parser.add_argument("--poll-interval", type=int, default=5)
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--no_table", action="store_true", default=True)
     args = parser.parse_args()
 
     forwarded = [
@@ -41,6 +42,8 @@ def build_args() -> list[str]:
         forwarded.extend(["--token", args.token])
     if args.resume:
         forwarded.append("--resume")
+    if args.no_table:
+        forwarded.append("--no_table")
     return forwarded
 
 
