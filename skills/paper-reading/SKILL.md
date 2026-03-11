@@ -40,7 +40,7 @@ python scripts/arxiv_note_helper.py exists --paper '<URL或ID>'
 说明：
 
 - arXiv 输入继续使用真实 arXiv ID 作为 `paper_id` 和文件名，如 `2601.05242.md`
-- 非 arXiv 输入统一生成类 arXiv 风格的 `paper_id`，格式为 `xxxx.xxxxx`，基于论文发表日期生成
+- 非 arXiv 输入统一生成类 arXiv 风格的 `paper_id`，格式为 `xxxx.xxxxx`
 - `paper_id` 同时用于笔记文件名、PDF 文件名、MinerU 输出目录和索引主键
 
 ### 2. 下载 PDF 并优先走 MinerU
