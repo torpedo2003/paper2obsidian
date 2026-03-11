@@ -26,7 +26,7 @@ def build_parser() -> argparse.ArgumentParser:
     group.add_argument("--url", help="Reserved for future URL support")
     parser.add_argument("--output", required=True, help="Output directory")
     parser.add_argument("--token", help="MinerU API token")
-    parser.add_argument("--workers", "-w", type=int, default=5, help="Concurrent workers")
+    parser.add_argument("--workers", "-w", type=int, default=1, help="Concurrent workers")
     parser.add_argument(
         "--mode",
         choices=["threaded", "stable"],

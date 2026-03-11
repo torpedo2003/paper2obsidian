@@ -31,7 +31,7 @@ class ParseOptions:
     timeout: int = DEFAULT_TIMEOUT
     retries: int = DEFAULT_RETRIES
     resume: bool = False
-    workers: int = 5
+    workers: int = 1
 
 
 @dataclass(frozen=True)
