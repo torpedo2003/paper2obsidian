@@ -74,15 +74,15 @@ def extract_source_date(value: str) -> datetime | None:
 
 def build_pseudo_arxiv_id(value: str) -> str:
     raw = value.strip()
-    dt = extract_source_date(raw)
-    digest = hashlib.sha1(raw.encode('utf-8')).hexdigest()
-    if dt is None:
-        dt = datetime(2000 + int(digest[0:2], 16) % 30, int(digest[2:4], 16) % 12 + 1, int(digest[4:6], 16) % 28 + 1, int(digest[6:8], 16) % 24, int(digest[8:10], 16) % 60)
-    dt = _normalize_datetime(dt)
-    suffix_num = (dt.day * 1000 + dt.hour * 60 + dt.minute) % 100000
+    now = datetime.now()
+    time_code = int(now.strftime("%y%m%d%H%M%S")) * 1000 + now.microsecond // 1000
+    pid = os.getpid()
+    mix = f"{time_code}-{pid}"
+    digest = hashlib.sha1(mix.encode("utf-8")).hexdigest()
+    suffix_num = int(digest[:10], 16) % 100000
     if suffix_num == 0:
-        suffix_num = int(digest[0:5], 16) % 100000
-    return f'{dt.year % 100:02d}{dt.month:02d}.{suffix_num:05d}'
+        suffix_num = (time_code + pid) % 100000 or 1
+    return f"0000.{suffix_num:05d}"
 
 
 def classify_source(value: str, is_arxiv: bool) -> str:
