@@ -17,7 +17,7 @@ def build_args() -> list[str]:
     group.add_argument("--dir", help="Input directory")
     parser.add_argument("--output", required=True, help="Output directory")
     parser.add_argument("--token", help="MinerU API token")
-    parser.add_argument("--concurrency", type=int, default=5, help="Mapped to worker count")
+    parser.add_argument("--concurrency", type=int, default=1, help="Mapped to worker count")
     parser.add_argument("--poll-interval", type=int, default=5)
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--resume", action="store_true")
