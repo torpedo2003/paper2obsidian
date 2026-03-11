@@ -40,7 +40,7 @@ python scripts/arxiv_note_helper.py exists --paper '<URL或ID>'
 说明：
 
 - arXiv 输入继续使用真实 arXiv ID 作为 `paper_id` 和文件名，如 `2601.05242.md`
-- 非 arXiv 输入统一生成类 arXiv 风格的 `paper_id`，格式为 `xxxx.xxxxx`，优先基于论文日期生成；如果日期信息不足或冲突，再用短 hash 补位，但仍保持同样外观
+- 非 arXiv 输入统一生成类 arXiv 风格的 `paper_id`，格式为 `xxxx.xxxxx`，基于论文发表日期生成
 - `paper_id` 同时用于笔记文件名、PDF 文件名、MinerU 输出目录和索引主键
 
 ### 2. 下载 PDF 并优先走 MinerU
@@ -50,8 +50,8 @@ python scripts/arxiv_note_helper.py exists --paper '<URL或ID>'
 - 使用现有脚本：
 
 ```bash
-curl -sL '<PDF_URL>' -o "$OBSIDIAN_VAULT/assets/pdfs/{PAPER_ID}.pdf"
-python scripts/mineru_api.py --url '<PDF_URL>' --output "$OBSIDIAN_VAULT/assets/mineru"
+curl -sL '<PDF_URL>' -o "$OBSIDIAN_VAULT/assets/pdfs/{PAPER_ID}.pdf" && \
+python scripts/mineru_api.py --file "$OBSIDIAN_VAULT/assets/pdfs/{PAPER_ID}.pdf" --output "$OBSIDIAN_VAULT/assets/mineru"
 ```
 
 - 如果输入本身就是 arXiv ID，则先构造 `https://arxiv.org/pdf/{ARXIV_ID}.pdf`
