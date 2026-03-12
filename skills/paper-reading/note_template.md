@@ -89,4 +89,4 @@ date_added: YYYY-MM-DD
 - **论文英文标题**
   [链接](https://arxiv.org/abs/xxxx.xxxxx) | [主页](https://<author>.github.io/project) | [代码](https://github.com/<author>/<project>) | [[xxxx.xxxxx]]
   它与本文的关系是什么，解决了什么问题，核心贡献是什么
-- ...
+- ... (PS: 相邻两个item之间不要空行)
