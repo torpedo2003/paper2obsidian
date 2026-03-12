@@ -1,6 +1,6 @@
 ---
 name: paper-reading
-description: 阅读、解读、总结、分析单篇论文时使用：优先下载论文 PDF，用 MinerU 提取全文与图片，在 Obsidian vault 中生成带原图嵌入的详细论文解读笔记。兼容 arXiv ID、arXiv URL、论文标题、PDF 链接、论文落地页 URL 和本地 PDF；当用户提到“读论文 / 看论文 / 解读这篇 paper / 总结这篇论文 / 帮我理解这篇论文 / 导入这篇论文到 Obsidian”等单篇论文场景时，即使没有明确要求写笔记，也优先使用此 skill。
+description: 阅读、解读、总结、分析单篇论文时使用：下载论文 PDF，用 MinerU 提取全文与图片，在 Obsidian vault 中生成带原图嵌入的详细论文解读笔记。兼容 arXiv ID、arXiv URL、论文标题、PDF 链接、论文落地页 URL 和本地 PDF；当用户提到“读论文 / 看论文 / 解读这篇 paper / 总结这篇论文 / 帮我理解这篇论文 / 导入这篇论文到 Obsidian”等单篇论文场景时，即使没有明确要求写笔记，也优先使用此 skill。
 ---
 
 # Paper Reading
@@ -37,8 +37,7 @@ python scripts/arxiv_note_helper.py status --paper '<URL或ID>'
 
 说明：
 
-- arXiv 输入继续使用真实 arXiv ID 作为 `paper_id` 和文件名，如 `2601.05242.md`
-- 非 arXiv 输入统一生成类 arXiv 风格的 `paper_id`，格式为 `xxxx.xxxxx`
+- 此脚本会返回 arXiv ID 风格的 `paper_id`，如 `2601.05242.md`
 - `paper_id` 同时用于笔记文件名、PDF 文件名、MinerU 输出目录和索引主键
 - 如果 `NOTE_EXISTS=1`，不要重写笔记；只在 PDF 或 MinerU 缺失时补齐缺失资产
 - 如果 `PDF_EXISTS=1`，不要重复下载 PDF
@@ -56,8 +55,6 @@ curl -sL '<PDF_URL>' -o "$OBSIDIAN_VAULT/assets/pdfs/{PAPER_ID}.pdf" && \
 python scripts/mineru_api.py --file "$OBSIDIAN_VAULT/assets/pdfs/{PAPER_ID}.pdf" --output "$OBSIDIAN_VAULT/assets/mineru"
 ```
 
-- 如果输入本身就是 arXiv ID，则先构造 `https://arxiv.org/pdf/{ARXIV_ID}.pdf`
-- 论文落地页 URL 需要先定位可下载 PDF，再继续后续流程
 - 轮询等待最多 120 秒，直到 `assets/mineru/{PAPER_ID}/{PAPER_ID}.md` 或 `full.md` 可读
 - 在 MinerU 未明确失败前，不要提前切 HTML / PDF fallback
 
@@ -77,13 +74,7 @@ python scripts/mineru_api.py --file "$OBSIDIAN_VAULT/assets/pdfs/{PAPER_ID}.pdf"
 
 ### 4. 写笔记：严格套模板
 
-确认以上信息后，**仅当 `NOTE_EXISTS=0` 时** 才写笔记；并且必须严格按 `note_template.md` 的字段和章节顺序写，不要新增“论文结构速览”“关键引用”等额外 section。
-
-**文件命名规则：**
-
-- 使用 `paper_id` 作为文件名
-- 对 arXiv 输入，`paper_id` 就是真实 arXiv ID
-- 对非 arXiv 输入，`paper_id` 是类 arXiv 风格 ID
+确认以上信息后才写笔记；并且必须严格按 `note_template.md` 的字段和章节顺序写，不要新增“论文结构速览”“关键引用”等额外 section。
 
 **写作风格偏好（用户画像：机器学习/深度学习研究者）：**
 
