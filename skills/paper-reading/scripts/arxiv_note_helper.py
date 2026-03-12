@@ -149,6 +149,29 @@ def cmd_exists(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_status(args: argparse.Namespace) -> int:
+    vault = Path(args.vault)
+    paper_id, is_arxiv = extract_paper_id(args.paper)
+    src_type = classify_source(args.paper, is_arxiv)
+    note = note_path(vault, paper_id)
+    pdf = pdf_path(vault, paper_id)
+    mineru_md = mineru_markdown(vault, paper_id)
+
+    print(f'PAPER_ID={paper_id}')
+    print(f'IS_ARXIV={1 if is_arxiv else 0}')
+    print(f'ARXIV_ID={paper_id if is_arxiv else ""}')
+    print(f'SOURCE_TYPE={src_type}')
+    print(f'SOURCE_URL={args.paper if src_type in {"url", "pdf"} else ""}')
+    print(f'NOTE_PATH={note}')
+    print(f'PDF_PATH={pdf}')
+    print(f'MINERU_DIR={mineru_dir(vault, paper_id)}')
+    print(f'MINERU_MD={mineru_md if mineru_md else ""}')
+    print(f'NOTE_EXISTS={1 if note.exists() else 0}')
+    print(f'PDF_EXISTS={1 if pdf.exists() else 0}')
+    print(f'MINERU_EXISTS={1 if mineru_md else 0}')
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description='Helpers for paper-reading skill')
     sub = parser.add_subparsers(dest='cmd', required=True)
@@ -163,13 +186,18 @@ def build_parser() -> argparse.ArgumentParser:
     p_exists.add_argument('--paper', '--arxiv', dest='paper', required=True)
     p_exists.set_defaults(func=cmd_exists)
 
+    p_status = sub.add_parser('status')
+    p_status.add_argument('--vault', default=os.environ.get('OBSIDIAN_VAULT', ''))
+    p_status.add_argument('--paper', '--arxiv', dest='paper', required=True)
+    p_status.set_defaults(func=cmd_status)
+
     return parser
 
 
 if __name__ == '__main__':
     parser = build_parser()
     args = parser.parse_args()
-    if not getattr(args, 'vault', None) and args.cmd in {'paths', 'exists'}:
+    if not getattr(args, 'vault', None) and args.cmd in {'paths', 'exists', 'status'}:
         print('OBSIDIAN_VAULT is required', file=sys.stderr)
         sys.exit(1)
     sys.exit(args.func(args))
