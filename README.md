@@ -21,6 +21,7 @@ This project is adapted from [`Chang-pw/paper2obsidian_skill`](https://github.co
 ```text
 skills/
 ├── paper-reading/          # Read one paper and generate a detailed note
+├── arxiv-translator/       # Translate arXiv papers into Chinese PDFs
 ├── paper-summary/          # Summarize multiple papers into a survey-style note
 ├── paper-index/            # Rebuild paper indexes and Obsidian Bases files
 └── parallel-paper-reader/  # Launch one Codex job per paper in parallel
@@ -83,6 +84,16 @@ A typical workflow looks like this:
 - **Composable**: each skill handles a clear stage of the paper workflow.
 - **Non-invasive**: documentation and workflow guidance are separated from core logic.
 
+### 5. `arxiv-translator`
+
+Use this skill when you want to translate an arXiv paper into a Chinese PDF from its LaTeX source.
+
+What it is good at:
+- downloading arXiv source packages and locating the main TeX file
+- translating the body while preserving formulas, citations, and LaTeX structure
+- compiling the translated source into a PDF
+- applying robust CJK compilation handling for translated papers
+
 ## Example Use Cases
 
 - Read one newly released paper and save a structured note.
@@ -131,6 +142,7 @@ Add a license here if you want to open-source the repository more formally.
 ```text
 skills/
 ├── paper-reading/          # 单篇论文阅读与笔记生成
+├── arxiv-translator/       # 将 arXiv 论文翻译为中文 PDF
 ├── paper-summary/          # 多篇论文总结与综述
 ├── paper-index/            # 论文索引整理与 .base 生成
 └── parallel-paper-reader/  # 多篇论文并行阅读调度
@@ -176,6 +188,16 @@ skills/
 - 保留用户原始输入格式
 - 相比串行处理更适合批量阅读
 - 支持多种 Agent CLI：`codex`, `claude`
+
+### 5. `arxiv-translator`
+
+当你想把一篇 arXiv 论文从 LaTeX 源码翻译成中文 PDF 时，使用这个 skill。
+
+它擅长：
+- 下载 arXiv 源码并定位主 TeX 文件
+- 翻译正文，同时保留公式、引用和 LaTeX 结构
+- 将翻译后的源码编译成 PDF
+- 为翻译后的论文处理更稳健的中文编译支持
 
 ## 工作流建议
 
