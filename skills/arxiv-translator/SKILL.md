@@ -88,6 +88,8 @@ python3 {SKILL_DIR}/scripts/compile.py "$WORK_DIR" "$MAIN_TEX" "$OUTPUT_DIR/$PDF
 
 默认中文排版优先采用稳定的 `LuaLaTeX + ctex` 风格预处理，重点保证中文字体、断行和正文观感；若论文源码已经自带可工作的 CJK/Unicode 栈，则保持其原方案不再额外注入。
 
+表格排版默认保持原样；只有当表格在编译后确实超过行宽时，才自动按 `\linewidth` 缩放。换言之，窄表不压缩，超宽表才 resize。
+
 编译失败时：读取 stderr 中的错误日志，参考 `references/compile-errors.md` 修复源码，重新编译（最多重试 2 次）。
 
 编译成功后清理掉中间文件：

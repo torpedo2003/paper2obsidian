@@ -26,6 +26,8 @@ _CMD_ALREADY_DEFINED_WITH_PATH_RE = re.compile(
 _BEGIN_DOCUMENT_RE = re.compile(r"\\begin\{document\}")
 _CTEX_PACKAGE_RE = re.compile(r"\\usepackage(?:\[[^\]]*\])?\{ctex\}")
 _CJK_RE = re.compile(r"[\u3400-\u9fff]")
+_USEPACKAGE_ADJUSTBOX_RE = re.compile(r"\\usepackage(?:\[[^\]]*\])?\{adjustbox\}")
+_TABLE_ENV_RE = re.compile(r"\\begin\{(?P<env>table\*?)\}(?P<opt>\[[^\]]*\])?(?P<body>.*?)\\end\{(?P=env)\}", re.DOTALL)
 _UNRESOLVED_CITE_MARKERS = ("[?", "?]")
 _UNRESOLVED_REF_MARKERS = ("??",)
 _SOURCE_TEXT_EXTS = {
@@ -322,6 +324,78 @@ def _preflight_comment_inputenc_fontenc(work_dir, main_rel):
     return changed
 
 
+def _ensure_package_in_main(work_dir, main_rel, package_line, package_re):
+    path = os.path.join(work_dir, main_rel)
+    try:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            text = f.read()
+    except OSError:
+        return False
+    if package_re.search(text):
+        return False
+    if not _BEGIN_DOCUMENT_RE.search(text):
+        return False
+    new_text, n = _BEGIN_DOCUMENT_RE.subn(package_line + "\n" + r"\begin{document}", text, count=1)
+    if n <= 0:
+        return False
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(new_text)
+    except OSError:
+        return False
+    return True
+
+
+def _wrap_oversize_tables(work_dir, main_rel):
+    changed = False
+    for rel, text in _collect_source_texts(work_dir).items():
+        if not rel.lower().endswith(".tex"):
+            continue
+        if "\\begin{tabular}" not in text:
+            continue
+
+        def _wrap_table(match):
+            body = match.group("body")
+            if "\\begin{adjustbox}" in body or "max width=\\linewidth" in body:
+                return match.group(0)
+            # adjustbox max width preserves narrow tables and scales only oversized ones.
+            if "\\begin{tabular}" not in body or "\\end{tabular}" not in body:
+                return match.group(0)
+            new_body, n = re.subn(
+                r"(?P<indent>^[ \t]*)\\begin\{tabular\}",
+                r"\g<indent>\\begin{adjustbox}{max width=\\linewidth}\n\g<indent>\\begin{tabular}",
+                body,
+                count=1,
+                flags=re.MULTILINE,
+            )
+            if n <= 0:
+                return match.group(0)
+            new_body, n = re.subn(
+                r"(?P<indent>^[ \t]*)\\end\{tabular\}",
+                r"\g<indent>\\end{tabular}\n\g<indent>\\end{adjustbox}",
+                new_body,
+                count=1,
+                flags=re.MULTILINE,
+            )
+            if n <= 0:
+                return match.group(0)
+            return f"\\begin{{{match.group('env')}}}{match.group('opt') or ''}{new_body}\\end{{{match.group('env')}}}"
+
+        new_text = _TABLE_ENV_RE.sub(_wrap_table, text)
+        if new_text == text:
+            continue
+        try:
+            with open(os.path.join(work_dir, rel), "w", encoding="utf-8") as f:
+                f.write(new_text)
+        except OSError:
+            continue
+        changed = True
+
+    if changed:
+        _ensure_package_in_main(work_dir, main_rel, r"\usepackage{adjustbox}", _USEPACKAGE_ADJUSTBOX_RE)
+    return changed
+
+
 def _source_uses_unicode_stack(texts):
     return any(
         any(
@@ -531,6 +605,7 @@ def compile_online(work_dir, main_tex, output_path):
         # Preflight source tweaks that are almost always needed for Unicode stacks.
         _preflight_comment_inputenc_fontenc(work_dir, main_rel)
         _preflight_comment_pdfoutput(work_dir, main_rel)
+        _wrap_oversize_tables(work_dir, main_rel)
         resources = _build_resources()
 
         payload = {
