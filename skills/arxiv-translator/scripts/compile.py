@@ -7,11 +7,17 @@ main_tex: path relative to work_dir (e.g. ms.tex), or absolute path to the main 
 output_pdf_path: full path for the output PDF; if an existing directory is passed, write <main_basename>.pdf there.
 """
 import base64
+import json
 import os
 import re
 import sys
+import urllib.error
+import urllib.request
 
-import requests
+try:
+    import requests
+except ModuleNotFoundError:  # Keep the compiler usable in minimal Python envs.
+    requests = None
 
 
 _BIBLATEX_RE = re.compile(r"\\(?:usepackage(?:\[[^\]]*\])?\{biblatex\}|addbibresource\{)")
@@ -24,7 +30,9 @@ _CMD_ALREADY_DEFINED_WITH_PATH_RE = re.compile(
     re.MULTILINE,
 )
 _BEGIN_DOCUMENT_RE = re.compile(r"\\begin\{document\}")
+_DOCUMENTCLASS_RE = re.compile(r"^(?P<line>\\documentclass(?:\[[^\]]*\])?\{[^}]+\}.*)$", re.MULTILINE)
 _CTEX_PACKAGE_RE = re.compile(r"\\usepackage(?:\[[^\]]*\])?\{ctex\}")
+_LUATEX85_RE = re.compile(r"\\usepackage(?:\[[^\]]*\])?\{luatex85\}")
 _CJK_RE = re.compile(r"[\u3400-\u9fff]")
 _USEPACKAGE_ADJUSTBOX_RE = re.compile(r"\\usepackage(?:\[[^\]]*\])?\{adjustbox\}")
 _TABLE_ENV_RE = re.compile(r"\\begin\{(?P<env>table\*?)\}(?P<opt>\[[^\]]*\])?(?P<body>.*?)\\end\{(?P=env)\}", re.DOTALL)
@@ -70,6 +78,34 @@ _AUTO_CJK_PREAMBLE = "\n".join(
         "",
     )
 )
+
+
+class _HTTPResponse:
+    def __init__(self, status_code, content, headers):
+        self.status_code = status_code
+        self.content = content
+        self.headers = headers or {}
+
+    def json(self):
+        return json.loads(self.content.decode("utf-8", errors="replace"))
+
+
+def _post_json(url, payload, timeout):
+    if requests is not None:
+        return requests.post(url, json=payload, timeout=timeout)
+
+    data = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=data,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return _HTTPResponse(resp.status, resp.read(), dict(resp.headers))
+    except urllib.error.HTTPError as e:
+        return _HTTPResponse(e.code, e.read(), dict(e.headers))
 
 
 def encode(path):
@@ -335,7 +371,7 @@ def _ensure_package_in_main(work_dir, main_rel, package_line, package_re):
         return False
     if not _BEGIN_DOCUMENT_RE.search(text):
         return False
-    new_text, n = _BEGIN_DOCUMENT_RE.subn(package_line + "\n" + r"\begin{document}", text, count=1)
+    new_text, n = _BEGIN_DOCUMENT_RE.subn(lambda _: package_line + "\n" + r"\begin{document}", text, count=1)
     if n <= 0:
         return False
     try:
@@ -344,6 +380,55 @@ def _ensure_package_in_main(work_dir, main_rel, package_line, package_re):
     except OSError:
         return False
     return True
+
+
+def _ensure_package_after_documentclass(work_dir, main_rel, package_line, package_re):
+    path = os.path.join(work_dir, main_rel)
+    try:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            text = f.read()
+    except OSError:
+        return False
+    if package_re.search(text):
+        return False
+    if not _DOCUMENTCLASS_RE.search(text):
+        return _ensure_package_in_main(work_dir, main_rel, package_line, package_re)
+
+    def _insert(m):
+        return m.group("line") + "\n" + package_line
+
+    new_text, n = _DOCUMENTCLASS_RE.subn(_insert, text, count=1)
+    if n <= 0:
+        return False
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(new_text)
+    except OSError:
+        return False
+    return True
+
+
+def _preflight_luatex_compat(work_dir, main_rel, compiler):
+    if compiler != "lualatex":
+        return False
+    path = os.path.join(work_dir, main_rel)
+    try:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            text = f.read()
+    except OSError:
+        return False
+
+    source_texts = _collect_source_texts(work_dir)
+    uses_legacy_pdftex_primitives = any(
+        tok in blob
+        for blob in source_texts.values()
+        for tok in ("\\pdfpagewidth", "\\pdfpageheight", "\\pdfhorigin", "\\pdfvorigin")
+    )
+    if not uses_legacy_pdftex_primitives:
+        return False
+    if _LUATEX85_RE.search(text):
+        return False
+    return _ensure_package_after_documentclass(work_dir, main_rel, r"\usepackage{luatex85}", _LUATEX85_RE)
 
 
 def _wrap_oversize_tables(work_dir, main_rel):
@@ -605,6 +690,7 @@ def compile_online(work_dir, main_tex, output_path):
         # Preflight source tweaks that are almost always needed for Unicode stacks.
         _preflight_comment_inputenc_fontenc(work_dir, main_rel)
         _preflight_comment_pdfoutput(work_dir, main_rel)
+        _preflight_luatex_compat(work_dir, main_rel, compiler)
         _wrap_oversize_tables(work_dir, main_rel)
         resources = _build_resources()
 
@@ -616,9 +702,9 @@ def compile_online(work_dir, main_tex, output_path):
                 "response": {"log_files_on_failure": True},
             },
         }
-        resp = requests.post(
+        resp = _post_json(
             "https://latex.ytotech.com/builds/sync",
-            json=payload,
+            payload,
             timeout=300,
         )
 

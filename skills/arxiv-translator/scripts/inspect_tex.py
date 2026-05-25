@@ -7,7 +7,7 @@ Usage:
 
 scope:
   - body: scan between \\begin{document} and \\end{document}; stop at \\appendix if present.
-  - full: scan whole file(s)
+  - full: scan all reachable TeX files, including appendix/supplementary material.
 
 Output:
   SUSPECT_COUNT=<n>
@@ -116,7 +116,8 @@ def _iter_relevant_lines(lines: list[str], scope: str) -> Iterable[tuple[int, st
             yield i, line
         return
 
-    # body scope
+    # body scope: intentionally excludes appendix. Use only when the user asks
+    # to translate the main body without appendix/supplementary material.
     in_doc = False
     in_tabular = False
     for i, line in enumerate(lines, start=1):
